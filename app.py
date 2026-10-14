@@ -19,7 +19,9 @@ app = Flask(__name__)
 CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, "data.txt")
+# Путь к файлу данных. По умолчанию — рядом с app.py (как в версии 2.0),
+# но в контейнере путь можно переопределить (например, на смонтированный том).
+DATA_FILE = os.environ.get("DATA_FILE", os.path.join(BASE_DIR, "data.txt"))
 
 
 def count_records(lines) -> int:
@@ -90,4 +92,8 @@ def get_data():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5001, debug=True)
+    # В контейнере сервис должен слушать все интерфейсы (HOST=0.0.0.0),
+    # чтобы быть доступным другим контейнерам по внутренней сети.
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "5001"))
+    app.run(host=host, port=port, debug=True)

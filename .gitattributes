@@ -1,0 +1,7 @@
+* text=auto
+
+# Dockerfile и текстовые конфиги всегда с LF — иначе ломаются переносы строк
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
